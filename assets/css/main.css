@@ -264,11 +264,13 @@ h6 a {
 h2 {
   font-size: 2em;
   line-height: 1.5em;
+  font-style: italic;
 }
-
+  
 h3 {
   font-size: 1.75em;
   line-height: 1.5em;
+  font-style: italic;
 }
 
 h4 {
