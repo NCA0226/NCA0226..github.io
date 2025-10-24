@@ -189,6 +189,16 @@ body.is-preload *:after {
   transition: none !important;
 }
 
+/* Conteneurs de texte : beige plus profond pour un effet papier */
+.container, .inner, #main {
+  background-color: #f1e2c6;          /* beige plus foncé, ton papier */
+  color: #2c1f0f;                     /* texte brun foncé */
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);  /* ombre légèrement plus marquée */
+  border: 1px solid rgba(160,130,90,0.3);   /* contour discret */
+}
+
 body,
 input,
 select,
