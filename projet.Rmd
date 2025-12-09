@@ -1,0 +1,61 @@
+---
+title: "Travail de recherche : les effets économique de l'électrification rurale au Kenya"
+author: "Cecilia Ariane Nadembega"
+output: html_document
+date: "2025-12-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## 3.3.1 Étapes du projet
+
+### Question de recherche et hypothèse
+
+**Question de recherche :**  
+Quel est l’effet des programmes d’électrification rurale sur le revenu des ménages au Kenya ?
+
+**Revue de littérature : consensus**  
+Plusieurs études montrent que l’accès à l’électricité augmente le revenu moyen des ménages et stimule l’entrepreneuriat local, notamment par la création de nouvelles micro-entreprises et l’extension des heures d’activité (Vernet et al., 2019; Mudi et al., 2019; Kirubi et al., 2009; Carabajal et al., 2024; Bahaj et al., 2019).  
+
+Par exemple, l’installation de mini-réseaux solaires a quadruplé le revenu médian dans certaines communautés rurales kényanes (Carabajal et al., 2024). L’électrification permet l’utilisation d’équipements électriques, ce qui améliore la productivité des petites entreprises et peut entraîner une croissance des revenus de 20 à 70 % selon le secteur (Kirubi et al., 2009). Les ménages propriétaires de micro-entreprises bénéficient d’une amélioration de leur bien-être et de leur niveau de vie grâce à l’augmentation des revenus liée à l’électrification (Mudi et al., 2019; Onyango et al., 2024).
+
+Toutefois, l’impact n’est pas uniforme : certaines études expérimentales montrent que l’électrification seule, sans mesures complémentaires (formation, accès au marché, équipements abordables), n’entraîne pas toujours de gains économiques significatifs pour tous les ménages (Lee et al., 2019; Lee et al., 2020; Pueyo & DeMartino, 2018). De plus, des études révèlent que les ménages les plus motivés ou disposant déjà de ressources bénéficient davantage, tandis que l’effet reste limité pour les plus vulnérables (Lee et al., 2019; Lee et al., 2020).
+
+C’est ce flou dans les résultats et la nécessité d’établir des preuves claires qui justifient la question de recherche :  
+**Quel est l’effet des programmes d’électrification rurale sur le revenu des ménages au Kenya ?**
+
+**Hypothèse :**  
+Les programmes d’électrification augmentent les revenus des ménages uniquement lorsqu’ils sont accompagnés de mesures de soutien telles que des formations (éducation, agriculture, etc.).
+
+### Collecte de données
+
+Pour la collecte de données, j’ai utilisé :
+
+- **La base de données de la Banque mondiale**, afin d’obtenir des séries temporelles sur :  
+  - le revenu des ménages,  
+  - le taux d’accès à l’électricité au Kenya,  
+  - plusieurs indicateurs socio-économiques utiles au contexte.
+
+- **Elicit**, utilisé comme moteur de recherche scientifique automatisé pour :  
+  - identifier des études liées à l’électrification au Kenya,  
+  - extraire les données mentionnées dans les articles,  
+  - vérifier la cohérence entre différentes sources.
+
+J’ai ensuite regroupé et exporté les données obtenues pour les analyser dans R.
+ You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
