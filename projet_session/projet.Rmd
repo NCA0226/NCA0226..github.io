@@ -1,20 +1,33 @@
 ---
-title: "Travail de recherche : les effets économique de l'électrification rurale au Kenya"
+title: "Travail de recherche : les effets économiques de l'électrification rurale au Kenya"
 author: "Cecilia Ariane Nadembega"
 output: html_document
 date: "2025-12-08"
 ---
 
+<style>
+body {
+    font-family: "Times New Roman", Times, serif;
+    background-color: #FFF8E7; /* beige */
+  }
+p {
+  text-align: justify;
+}
+h1, h2, h3, h4 {
+  text-align: center;
+}
+</style>
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## 3.3.1 Étapes du projet
 
 ### Question de recherche et hypothèse
 
 **Question de recherche :**  
-Quel est l’effet des programmes d’électrification rurale sur le revenu des ménages au Kenya ?
+Quel était l’effet de l’électrification rurale sur le revenu des ménages au Kenya, avant le programme d'électrification de 1996 ?
 
 **Revue de littérature : consensus**  
 Plusieurs études montrent que l’accès à l’électricité augmente le revenu moyen des ménages et stimule l’entrepreneuriat local, notamment par la création de nouvelles micro-entreprises et l’extension des heures d’activité (Vernet et al., 2019; Mudi et al., 2019; Kirubi et al., 2009; Carabajal et al., 2024; Bahaj et al., 2019).  
@@ -24,10 +37,10 @@ Par exemple, l’installation de mini-réseaux solaires a quadruplé le revenu m
 Toutefois, l’impact n’est pas uniforme : certaines études expérimentales montrent que l’électrification seule, sans mesures complémentaires (formation, accès au marché, équipements abordables), n’entraîne pas toujours de gains économiques significatifs pour tous les ménages (Lee et al., 2019; Lee et al., 2020; Pueyo & DeMartino, 2018). De plus, des études révèlent que les ménages les plus motivés ou disposant déjà de ressources bénéficient davantage, tandis que l’effet reste limité pour les plus vulnérables (Lee et al., 2019; Lee et al., 2020).
 
 C’est ce flou dans les résultats et la nécessité d’établir des preuves claires qui justifient la question de recherche :  
-**Quel est l’effet des programmes d’électrification rurale sur le revenu des ménages au Kenya ?**
+**Quel était l’effet de l’électrification rurale sur le revenu des ménages au Kenya avant le programme d'électrification de 1996 ?**
 
 **Hypothèse :**  
-Les programmes d’électrification augmentent les revenus des ménages uniquement lorsqu’ils sont accompagnés de mesures de soutien telles que des formations (éducation, agriculture, etc.).
+L’électrification augmentait le revenu des ménages uniquement lorsqu’elle était accompagnée de mesures de soutien telles que l'éducation.
 
 ### Collecte de données
 
@@ -38,19 +51,116 @@ Pour la collecte de données, j’ai utilisé :
   - le taux d’accès à l’électricité au Kenya,  
   - le taux d'accès à l'éducation.
 
+
 J’ai ensuite regroupé et exporté les données obtenues pour les analyser dans R.
 
 ### Visualisation de données
+La visualisation des données a été réalisée à l’aide du package ggplot2 de R, un outil couramment utilisé en analyse statistique pour produire des graphiques. Les séries annuelles du taux d’électrification, du PIB par habitant et du taux de scolarisation ont été importées sous forme de tableau, puis combinées dans un même graphique.
 
+```{r graphique-projet, echo=FALSE, message=FALSE, warning=FALSE}
+# *2. Extraire les données de la Banque mondiale*
+# Installer les packages si nécessaire
+# install.packages("WDI")
+# install.packages("tidyverse")
+
+library(WDI)
+library(tidyverse)
+
+# Indicateurs Banque mondiale
+indicators <- c(
+  electrification = "EG.ELC.ACCS.ZS",
+  pib_habitant = "NY.GDP.PCAP.CD",
+  scolarisation_primaire = "SE.PRM.ENRR",
+  scolarisation_secondaire = "SE.SEC.ENRR",
+  scolarisation_tertiaire = "SE.TER.ENRR"
+)
+
+# Récupération des données pour le Kenya
+data <- WDI(
+  country = "KEN",
+  indicator = indicators,
+  start = 1990,
+  end = 2023
+)
+
+
+# Nettoyage final
+data_clean <- data %>%
+  select(year, electrification, pib_habitant, scolarisation_primaire) %>%
+  rename(
+    annee = year,
+    scolarisation = scolarisation_primaire
+  ) %>%
+  arrange(annee)
+
+
+
+data_long <- data_clean %>%
+  pivot_longer(
+    cols = c(electrification, pib_habitant, scolarisation),
+    names_to = "variable",
+    values_to = "valeur"
+  )
+
+ggplot(data_long, aes(x = annee, y = valeur, color = variable)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  labs(
+    title = "Évolution : Électrification, PIB/habitant et Scolarisation — Kenya",
+    x = "Année",
+    y = "Valeur"
+  ) +
+  theme_minimal()
+```
+
+
+
+### Analyse de données
+
+La figure présente l’évolution du taux d’accès à l’électricité, du PIB par habitant et du taux de scolarisation (primaire) au Kenya entre 1990 et 2023. Cette période inclut les années précédant 1996, ce qui permet d’examiner les tendances avant le lancement du grand programme d’électrification rurale. Plusieurs points ressortent :
+
+**Évolution de l’électrification et du revenu avant 1996** 
+Entre 1990 et 1995, l’accès à l’électricité reste très faible (souvent en dessous de 10 %), mais on observe une légère progression à partir de 1993. Sur la même période, le PIB par habitant présente une tendance fluctuante mais globalement décroissante jusqu’en 1993, suivie d’un léger rebond.
+
+En l’état, l’évolution agrégée ne montre pas de corrélation claire ou immédiate entre électrification et revenu avant 1996. Cela s’explique par :
+
+- Un taux d’électrification encore trop faible pour générer des effets macroéconomiques visibles ;
+
+- Une crise économique dans les années 1990 au Kenya, qui masque potentiellement les gains locaux liés à l’électricité ;
+
+- L’absence de données microéconomiques permettant de distinguer les ménages électrifiés des autres.
+
+Ainsi, les données visualisées ne confirment pas directement un effet positif sur le revenu avant 1996, même si elles ne l’infirment pas non plus.
+
+**Rôle potentiel de l’éducation** 
+Le taux de scolarisation primaire est relativement élevé dès 1990 (plus de 100 %, ce qui est normal pour un taux net ajusté). Toutefois :
+
+- Il diminue régulièrement entre 1990 et 1995 ;
+
+- Ce déclin peut réduire la capacité des ménages à tirer parti d’une éventuelle électrification (moins de capital humain, moins de capacité à utiliser des équipements productifs).
+
+- Cette dynamique rend plausible ton hypothèse :
+les gains de revenu liés à l’électricité sont plus forts lorsqu’un minimum de capital humain est présent.
+
+Mais encore une fois, cette conclusion ne peut être tirée directement des données agrégées : elle repose sur la littérature et sur la logique économique, pas sur un test empirique.
+
+**Limites méthodoligiques** 
+Plusieurs limites importantes doivent être reconnues :
+
+- Données agrégées nationales :
+Elles ne permettent pas d’identifier un effet causal de l’électrification. Pour évaluer ton hypothèse, il faudrait idéalement des données ménages (LSMS, RCT, données géolocalisées, etc.).
+
+( Faible variation de l’électrification avant 1996 :
+La quasi-stagnation rend l’identification quasi impossible.
+
+- Variables macroéconomiques influencées par de multiples facteurs (instabilité politique, prix mondiaux, sécheresses…), ce qui empêche d’attribuer une tendance du PIB à l’électrification.
+
+**Implications pour l'hypothèse** : Nos observations suggèrent que l'accès à l'électricité peut augmenter les revenus, mais l'effet est probablement plus fort lorsqu'il est accompagné de mesures de soutien comme l'éducation ou la formation professionnelle.
+
+### Conclusion 
+
+L'analyse montre que, avant 1996, l’électrification était trop limitée pour produire des effets macroéconomiques observables sur les revenus. Cependant, la littérature et les mécanismes économiques suggèrent que lorsqu’elle est combinée à l’éducation ou à des politiques complémentaires, l’électrification peut augmenter les revenus des ménages.
+Nos résultats descriptifs vont dans ce sens : ils ne prouvent pas l’effet, mais ils sont cohérents avec l’idée que le capital humain joue un rôle modérateur important.
 
 ### Discussions
-
-La visualisation des données montre l'évolution de l'accès à l'électricité, de l'inscription scolaire secondaire et du revenu par habitant au Kenya sur 5 ans. Plusieurs points ressortent :
-
-- **Lien entre électricité et revenu** : On observe que les périodes où l'accès à l'électricité augmente correspondent généralement à une hausse du PIB par habitant, ce qui soutient partiellement notre hypothèse.
-- **Rôle de l'éducation** : Les fluctuations de l'inscription scolaire secondaire peuvent influencer la capacité des ménages à tirer parti de l'accès à l'électricité (ex. formation pour entreprendre ou utiliser des équipements électriques).
-- **Limites des données** : Il s'agit de données agrégées, qui ne permettent pas d'étudier l'effet au niveau des ménages individuels. D'autres facteurs, comme l'accès aux marchés ou aux financements, peuvent aussi moduler l'impact de l'électrification.
-- **Implications pour l'hypothèse** : Nos observations suggèrent que l'accès à l'électricité peut augmenter les revenus, mais l'effet est probablement plus fort lorsqu'il est accompagné de mesures de soutien comme l'éducation ou la formation professionnelle.
-
-**Conclusion provisoire** : Les résultats sont cohérents avec la littérature ; ils indiquent un effet positif de l’électrification sur le revenu, mais soulignent l’importance des politiques complémentaires.
-
+Pour ce projet, j’ai choisi mes outils en fonction de leur accessibilité, de leur flexibilité et de leur capacité à produire des résultats transparents et réplicables. Elicit a été utilisé pour guider la revue de littérature et identifier rapidement des études pertinentes sur l’impact de l’électrification, permettant ainsi de gagner du temps tout en restant fiable. Ensuite, Consensus a servi à synthétiser les informations issues de plusieurs articles et à résumer les connaissances principales, facilitant une lecture structurée des résultats. Pour la collecte de données quantitatives, j’ai utilisé la Banque mondiale, qui fournit des séries temporelles fiables sur l’électrification, le PIB par habitant et la scolarisation au Kenya. Enfin, pour l’analyse et la visualisation des données, j’ai utilisé RStudio avec le package ggplot2, permettant de créer des graphiques clairs et personnalisables tout en conservant une traçabilité complète des étapes de l’analyse. Le choix de ces outils répondait à plusieurs critères : leur accessibilité, l’existence d’une communauté d’utilisateurs active, leur compatibilité avec d’autres outils, et leur capacité à produire des résultats réplicables et adaptables selon les besoins de la recherche.
