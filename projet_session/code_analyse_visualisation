@@ -1,0 +1,54 @@
+```{r graphique-projet, echo=FALSE, message=FALSE, warning=FALSE}
+# *2. Extraire les données de la Banque mondiale*
+# Installer les packages si nécessaire
+# install.packages("WDI")
+# install.packages("tidyverse")
+
+library(WDI)
+library(tidyverse)
+
+# Indicateurs Banque mondiale
+indicators <- c(
+  electrification = "EG.ELC.ACCS.ZS",
+  pib_habitant = "NY.GDP.PCAP.CD",
+  scolarisation_primaire = "SE.PRM.ENRR",
+  scolarisation_secondaire = "SE.SEC.ENRR",
+  scolarisation_tertiaire = "SE.TER.ENRR"
+)
+
+# Récupération des données pour le Kenya
+data <- WDI(
+  country = "KEN",
+  indicator = indicators,
+  start = 1990,
+  end = 2023
+)
+
+
+# Nettoyage final
+data_clean <- data %>%
+  select(year, electrification, pib_habitant, scolarisation_primaire) %>%
+  rename(
+    annee = year,
+    scolarisation = scolarisation_primaire
+  ) %>%
+  arrange(annee)
+
+
+
+data_long <- data_clean %>%
+  pivot_longer(
+    cols = c(electrification, pib_habitant, scolarisation),
+    names_to = "variable",
+    values_to = "valeur"
+  )
+
+ggplot(data_long, aes(x = annee, y = valeur, color = variable)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  labs(
+    title = "Évolution : Électrification, PIB/habitant et Scolarisation — Kenya",
+    x = "Année",
+    y = "Valeur"
+  ) +
+  theme_minimal()
